@@ -32,7 +32,9 @@ namespace WebApplication1
             builder.Services.AddScoped<IFaqRepository, FaqRepository>();
             builder.Services.AddScoped<IPlanRepository, PlanRepository>();
             builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
+            builder.Services.AddScoped<IContentRepository, ContentRepository>();
 
+            builder.Services.AddScoped<IContentService, ContentService>();
             builder.Services.AddScoped<IGenreService, GenreService>();
             builder.Services.AddScoped<IFaqService, FaqService>();
             builder.Services.AddScoped<IPlanService, PlanService>();
