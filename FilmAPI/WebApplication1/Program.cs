@@ -1,7 +1,12 @@
 
 using DotNetEnv;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using WebApplication1.Data;
+using WebApplication1.Entities.Auth;
 using WebApplication1.Repository.Implementations;
 using WebApplication1.Repository.Interfaces;
 using WebApplication1.Service.Implementations;
@@ -26,6 +31,36 @@ namespace WebApplication1
             //db connection (mssql)
             var connectionString = Environment.GetEnvironmentVariable("DATABASE");
             builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
+
+            builder.Services.AddIdentity<AppUser, IdentityRole<int>>(options => {
+                options.Password.RequiredLength = 6;
+                options.Password.RequireDigit = true;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+
+                options.User.RequireUniqueEmail = true;
+            }).AddEntityFrameworkStores<AppDbContext>()
+            .AddDefaultTokenProviders();
+
+            var jwtSecret = Environment.GetEnvironmentVariable("jwtSecret");
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+             {
+             options.TokenValidationParameters = new TokenValidationParameters
+              {
+               ValidateIssuerSigningKey = true,
+             IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(jwtSecret!)),
+            ValidateIssuer = false,
+             ValidateAudience = false,
+               ClockSkew = TimeSpan.Zero  
+           };
+});
 
             //services,repos di
             builder.Services.AddScoped<IGenreRepository, GenreRepository>();
@@ -65,6 +100,7 @@ namespace WebApplication1
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseCors("Front");

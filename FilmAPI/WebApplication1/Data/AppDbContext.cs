@@ -1,9 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using WebApplication1.Entities;
+using WebApplication1.Entities.Auth;
 
 namespace WebApplication1.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<AppUser,IdentityRole<int>,int>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -21,6 +24,8 @@ namespace WebApplication1.Data
         public DbSet<Faq> Faqs { get; set; }
         public DbSet<PricingPlan> PricingPlans { get; set; }
         public DbSet<Device> Devices { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
