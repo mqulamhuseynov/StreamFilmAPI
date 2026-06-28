@@ -9,5 +9,8 @@ namespace WebApplication1.Service.Interfaces
         public Task<ApiResponse<IEnumerable<TopTenDTO>>> GetTopTen(string? type);
         public Task<ApiResponse<IEnumerable<ContentPageGenreDTO>>> GetContentPageGenre(string? type);
         public Task<ApiResponse<IEnumerable<ContentListDTO>>> GetContentList(string? type, string? filter, int limit);
+        public Task<ApiResponse<ContentDetailDTO>> GetContentDetail(string? id);
+        public Task<ApiResponse<IEnumerable<SeasonDTO>>> GetSeasons(string? id);
+        public Task<ApiResponse<IEnumerable<ReviewDTO>>> GetReviews(string? id);
     }
 }

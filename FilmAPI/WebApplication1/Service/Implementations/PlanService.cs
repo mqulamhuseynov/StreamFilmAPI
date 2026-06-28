@@ -22,7 +22,7 @@ namespace WebApplication1.Service.Implementations
 
             if (plan != "monthly" && plan != "yearly") 
             {
-                return ApiResponse<IEnumerable<PlanDTO>>.FailResponse("Plan is wrong, available plans are: monthly,yearly");
+                return ApiResponse<IEnumerable<PlanDTO>>.FailResponse("Plan is wrong, available plans are: monthly,yearly", 400);
             }
 
             var plans = await _planRepository.GetPricingPlans();

@@ -1,18 +1,23 @@
-﻿namespace WebApplication1.Entities.Commons
+﻿using System.Text.Json.Serialization;
+
+namespace WebApplication1.Entities.Commons
 {
     public class ApiResponse<T>
     {
         public string Message { get; set; } = string.Empty;
         public bool Success { get; set; }
         public T? Data { get; set; }
+        [JsonIgnore]
+        public int StatusCode { get; set; }
 
-        public static ApiResponse<T> SuccessResponse(T data, string message = "Ok") => new ApiResponse<T>
+        public static ApiResponse<T> SuccessResponse(T data, string message = "Ok", int code = 200) => new ApiResponse<T>
         {
             Message = message,
             Success = true,
-            Data = data
+            Data = data,
+            StatusCode = code
         };
 
-        public static ApiResponse<T> FailResponse(string message) => new ApiResponse<T> { Success = false, Data = default, Message = message };
+        public static ApiResponse<T> FailResponse(string message, int code) => new() { Success = false, Data = default, Message = message, StatusCode = code };
     }
 }

@@ -21,7 +21,7 @@ namespace WebApplication1.Service.Implementations
             {
                 if(!Enum.TryParse<GenreType>(type,true,out var result))
                 {
-                    return ApiResponse<IEnumerable<GenreDTO>>.FailResponse("Failed auyes");
+                    return ApiResponse<IEnumerable<GenreDTO>>.FailResponse("Failed auyes",400);
                 }
 
 

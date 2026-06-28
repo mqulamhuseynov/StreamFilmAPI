@@ -15,6 +15,20 @@ namespace WebApplication1.Repository.Implementations
             _context = context;
         }
 
+        public async Task<Content?> GetContentDetailById(int id)
+        {
+            return await _context.Contents
+                .AsNoTracking()
+                .Include(c => c.ContentGenres)
+                   .ThenInclude(c => c.Genre)
+                .Include(c => c.ContentLanguages)
+                .Include(c => c.ContentPeople)
+                .ThenInclude(cp => cp.Person)
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+
+        }
+
         public async Task<IEnumerable<Content>> GetContents(ContentType type, int limit, string flag)
         {
             var query = _context.Contents.AsNoTracking()
@@ -38,6 +52,25 @@ namespace WebApplication1.Repository.Implementations
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Review>> GetReviews(int id)
+        {
+            return await _context.Reviews
+                .AsNoTracking()
+                .Where(r => r.ContentId == id)
+                .OrderByDescending(r => r.Id)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Season>> GetSeasons(int id)
+        {
+            return await _context.Seasons
+                .AsNoTracking()
+                .Include(c => c.Episodes.OrderBy(c => c.EpisodeNumber))
+                .Where(s => s.ContentId == id)
+                .OrderBy(c => c.SeasonNumber)
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<Content>> GetTopTen(ContentType type)
         {
             return await _context.Contents.AsNoTracking()
@@ -47,6 +80,11 @@ namespace WebApplication1.Repository.Implementations
                 .OrderBy(c => c.TopTenRank)
                 .ToListAsync();
 
+        }
+
+        public async Task<bool> ItemExists(int id)
+        {
+            return await _context.Contents.AnyAsync(c => c.Id == id);
         }
     }
 }
