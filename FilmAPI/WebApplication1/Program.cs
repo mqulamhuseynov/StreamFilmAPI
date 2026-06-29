@@ -74,6 +74,7 @@ namespace WebApplication1
             builder.Services.AddScoped<IFaqService, FaqService>();
             builder.Services.AddScoped<IPlanService, PlanService>();
             builder.Services.AddScoped<IDeviceService, DeviceService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
 
             //cors
             var corsConnection = Environment.GetEnvironmentVariable("CORS");
